@@ -1,10 +1,12 @@
 <script setup>
-import TheWelcome from "@/components/TheWelcome.vue";
-import MathExpressionContainer from "@/components/MathExpressionContainer.vue"
+import MainContainer from "@/components/MainContainer.vue"
 </script>
 
 <template>
+  <header>
+    <h2>Lemma</h2>
+  </header>
   <main>
-    <MathExpressionContainer/>
+    <MainContainer />
   </main>
 </template>
