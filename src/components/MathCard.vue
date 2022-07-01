@@ -1,8 +1,3 @@
-<template>
-  <katex-display :expr="expr"/>
-  <h4>{{caption}}</h4>
-</template>
-
 <script>
 import KatexDisplay from "./KatexDisplay.vue"
 
@@ -15,6 +10,35 @@ export default {
 }
 </script>
 
-<style>
+<template>
+  <div class="equation-container">
+    <katex-display :expr="expr"/>
+    <h4 class="expr-caption">{{caption}}</h4>
+  </div>
+</template>
 
+<style>
+  .equation-container {
+    background-color: var(--vt-c-white-soft);
+    border: 2px solid var(--vt-c-divider-light-2);
+    border-radius: 10px;
+    width: auto;
+    max-width: 300px;
+    padding: 1em 1em 1em;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 5px;
+    margin-bottom: 1em;
+  }
+
+  /* for controlling the color of mathtext */
+  .katex {
+    color: var(--vt-c-text-light-1);
+  }
+  
+  .expr-caption {
+    padding-top: 0.2em;
+    color: var(--vt-c-text-light-1);
+  }
 </style>

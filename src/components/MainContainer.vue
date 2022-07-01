@@ -1,6 +1,8 @@
 <script>
 import MathCard from "./MathCard.vue";
-const API_URL = "https://5000-schineaj23-lemmabackend-ldvdgzsxbio.ws-us47.gitpod.io";
+
+const API_URL =
+  "https://5000-schineaj23-lemmabackend-1qsojvwdbem.ws-us47.gitpod.io";
 
 export default {
   components: { MathCard },
@@ -22,6 +24,10 @@ export default {
       this.display = response["result"];
     },
     async submitWork() {
+      if (this.mathInput == null) {
+        return;
+      }
+
       // The last element is designated as the "guess" or solution to the problem
       this.steps[this.steps.length - 1].type = "guess";
 
@@ -53,11 +59,14 @@ export default {
 <template>
   <math-card :expr="display" caption="Debug Request Result" />
 
-  <div v-for="(step, index) in steps" :key="step">
-    <math-card :expr="step.expr" :caption="step.caption" />
+  <div class="step-container">
+    <div v-for="(step, index) in steps" :key="step" class="step">
+      <math-card :expr="step.expr" :caption="step.caption" />
 
-    <!-- Need to style this later. -->
-    <button @click="steps.splice(index, 1)">Remove</button>
+      <!-- Need to style this later. -->
+      <!-- <button @click="steps.splice(index, 1)">Remove</button> -->
+      <span class="material-symbols-rounded remove-button" @click="steps.splice(index, 1)"> close </span>
+    </div>
   </div>
 
   <code id="code" class="latex-preview">{{ mathInput }}</code>
@@ -65,6 +74,8 @@ export default {
     :options="{ smartFence: true, virtualKeyboardMode: 'onfocus' }"
     v-model="mathInput"
   ></math-field>
+
+  <div class="response-box" :class="{ correct: isCorrect }"></div>
 
   <button @click="updateFormula">Simplify</button>
   <button @click="addWork">
@@ -79,16 +90,11 @@ math-field {
   font-size: 32px;
   margin: 1em;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-}
-
-.lemma-title {
-  display: block;
-  justify-self: center;
 }
 
 .math-display {
@@ -101,5 +107,12 @@ math-field {
 /* need to figure out how to bind everything to the input box*/
 .latex-preview {
   max-width: 10px;
+}
+
+.remove-button {
+  display: inside;
+  float: top;
+  position: relative;
+  color: var(--vt-c-text-light-1)
 }
 </style>

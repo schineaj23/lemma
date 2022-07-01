@@ -8,6 +8,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "dotenv": "^16.0.1",
     "katex": "^0.16.0",
     "mathlive": "^0.74.0",
     "vue": "^3.2.36",
