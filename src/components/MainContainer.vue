@@ -49,7 +49,7 @@ export default {
       this.steps.push({
         expr: this.mathInput,
         type: this.steps.length > 0 ? "step" : "initial",
-        caption: "This will be filled in later!",
+        caption: `Step ${this.steps.length + 1}`,
       });
     },
   },
@@ -110,9 +110,6 @@ math-field {
 }
 
 .remove-button {
-  display: inside;
-  float: top;
-  position: relative;
   color: var(--vt-c-text-light-1)
 }
 </style>
