@@ -3,12 +3,19 @@ import MathCard from "./MathCard.vue";
 import Response from './Response.vue'
 
 const API_URL =
-  "https://5000-schineaj23-lemmabackend-72ni3tdvicn.ws-us54.gitpod.io";
+  "https://5000-schineaj23-lemmabackend-ld59upr47fq.ws-us54.gitpod.io";
 
 export default {
   components: { MathCard, Response },
   data() {
     return {
+      operations: [
+        'integral',
+        'derivative',
+        'simplify',
+        'solve'
+      ],
+      currentOperation: "simplify",
       steps: [],
       display: "x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}",
       mathInput: "",
@@ -17,8 +24,8 @@ export default {
     };
   },
   methods: {
-    async updateFormula() {
-      const request = new Request(`${API_URL}/simplify`, {
+    async instantEvaluate() {
+      const request = new Request(`${API_URL}/${this.currentOperation}`, {
         method: "POST",
         body: JSON.stringify({ expr: this.mathInput }),
         headers: { "Content-Type": "application/json" },
@@ -27,7 +34,7 @@ export default {
       this.display = response["result"];
     },
     async submitWork() {
-      if (this.mathInput == null)
+      if(this.steps.length == 0)
         return;
 
       // The last element is designated as the "guess" or solution to the problem
@@ -38,7 +45,9 @@ export default {
       // Send this data to the server
       const request = new Request(`${API_URL}/submit_work`, {
         method: "POST",
-        body: JSON.stringify(this.steps),
+        body: JSON.stringify({
+          "operation": this.currentOperation,
+          "steps": this.steps}),
         headers: { "Content-Type": "application/json" },
       });
 
@@ -56,7 +65,6 @@ export default {
       this.steps.push({
         expr: this.mathInput,
         type: this.steps.length > 0 ? "step" : "initial",
-        caption: this.steps.length > 0 ? `Step ${this.steps.length}` : `Problem`,
       });
     },
   },
@@ -68,7 +76,8 @@ export default {
 
   <div class="step-container">
     <div v-for="(step, index) in steps" :key="step" class="step">
-      <math-card :expr="step.expr" :caption="step.caption" />
+      <math-card :expr="step.expr" 
+        :caption="index == 0 ? `Problem` : index == steps.length-1 ? `Guess` : `Step ${index}`" />
 
       <!-- Need to style this later. -->
       <!-- <button @click="steps.splice(index, 1)">Remove</button> -->
@@ -78,17 +87,20 @@ export default {
 
   <code id="code" class="latex-preview">{{ mathInput }}</code>
   <math-field
-    :options="{ smartFence: true, virtualKeyboardMode: 'onfocus' }"
+    :options="{ smartFence: true }"
     v-model="mathInput"
   ></math-field>
 
   <Response :correct="correct" v-if="renderResult" />
-
-  <button @click="updateFormula">Simplify</button>
+  
+  <select class="operation-chooser" v-model="currentOperation">
+    <option v-for="operation in operations" :key="operation" :value="operation">{{operation}}</option>
+  </select>
   <button @click="addWork">
     {{ steps.length > 0 ? "Add Work" : "Enter Problem" }}
   </button>
-  <button @click="submitWork">Submit Work</button>
+  <button v-if="steps.length > 0" @click="submitWork">Submit Work</button>
+  <button v-else @click="instantEvaluate">Evaluate</button>
 </template>
 
 <style>

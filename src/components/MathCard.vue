@@ -27,7 +27,7 @@ export default {
     padding: 1em 1em 1em;
     display: flex;
     align-items: center;
-    flex-direction: column;
+    flex-direction: column-reverse;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     margin-bottom: 1em;
   }
@@ -38,7 +38,7 @@ export default {
   }
   
   .expr-caption {
-    padding-top: 0.2em;
+    margin-bottom: 0.1em;
     color: var(--vt-c-text-light-1);
   }
 </style>

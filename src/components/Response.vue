@@ -2,13 +2,6 @@
 export default {
     props: {
         correct: Boolean
-    },
-    computed: {
-        responseStyle() {
-            return {
-                correctClass: this.$props.correct ? 'correct' : 'incorrect'
-            }
-        }
     }
 }
 </script>
@@ -32,6 +25,7 @@ export default {
 .correct {
   background-color:palegreen;
 }
+
 .incorrect {
   background-color:indianred;
 }
