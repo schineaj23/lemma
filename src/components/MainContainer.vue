@@ -1,16 +1,19 @@
 <script>
 import MathCard from "./MathCard.vue";
+import Response from './Response.vue'
 
 const API_URL =
-  "https://5000-schineaj23-lemmabackend-1qsojvwdbem.ws-us47.gitpod.io";
+  "https://5000-schineaj23-lemmabackend-72ni3tdvicn.ws-us54.gitpod.io";
 
 export default {
-  components: { MathCard },
+  components: { MathCard, Response },
   data() {
     return {
       steps: [],
       display: "x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}",
       mathInput: "",
+      correct: false,
+      renderResult: false
     };
   },
   methods: {
@@ -24,12 +27,13 @@ export default {
       this.display = response["result"];
     },
     async submitWork() {
-      if (this.mathInput == null) {
+      if (this.mathInput == null)
         return;
-      }
 
       // The last element is designated as the "guess" or solution to the problem
       this.steps[this.steps.length - 1].type = "guess";
+
+      console.log(this.steps);
 
       // Send this data to the server
       const request = new Request(`${API_URL}/submit_work`, {
@@ -41,15 +45,18 @@ export default {
       let response = await fetch(request)
         .then((res) => res.json())
         .catch((err) => console.err(err));
+      this.correct = response["result"] == "true";
+      this.renderResult = true;
     },
     addWork() {
+      this.renderResult = false;
       // The first element is designated as the "initial" or problem that we're trying to solve
       if (this.mathInput == "") return;
 
       this.steps.push({
         expr: this.mathInput,
         type: this.steps.length > 0 ? "step" : "initial",
-        caption: `Step ${this.steps.length + 1}`,
+        caption: this.steps.length > 0 ? `Step ${this.steps.length}` : `Problem`,
       });
     },
   },
@@ -75,7 +82,7 @@ export default {
     v-model="mathInput"
   ></math-field>
 
-  <div class="response-box" :class="{ correct: isCorrect }"></div>
+  <Response :correct="correct" v-if="renderResult" />
 
   <button @click="updateFormula">Simplify</button>
   <button @click="addWork">
